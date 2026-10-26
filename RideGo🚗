@@ -1,0 +1,318 @@
+#include <iostream>
+#include <string>
+using namespace std;
+
+// Functions
+void showDrivers(string driverNames[], string carNames[], int driverRating[],
+                 bool driverAvailable[], int driverCount)
+{
+    cout << "\n========== AVAILABLE DRIVERS ==========\n";
+
+    for (int i = 0; i < driverCount; i++)
+    {
+        if (driverAvailable[i] == true)
+        {
+            cout << "\nDriver ID: " << i + 1;
+            cout << "\nName: " << driverNames[i];
+            cout << "\nCar: " << carNames[i];
+            cout << "\nRating: " << driverRating[i] << "/5";
+            cout << "\n--------------------------";
+        }
+    }
+}
+
+int main()
+{
+    // Customer information
+    string customerName;
+    string phone;
+
+    // Ride information
+    string pickup;
+    string destination;
+    string rideType;
+    string paymentMethod;
+
+    int choice;
+    int rideTypeChoice;
+    int driverChoice;
+
+    double distance;
+    double pricePerKM;
+    double baseFare;
+    double serviceFee;
+    double totalPrice;
+
+    // Drivers data
+    string driverNames[5] =
+    {
+        "Ahmed Ali",
+        "Mohamed Hassan",
+        "Omar Khaled",
+        "Youssef Amr",
+        "Mahmoud Adel"
+    };
+
+    string carNames[5] =
+    {
+        "Hyundai Elantra",
+        "Kia Cerato",
+        "Toyota Corolla",
+        "Nissan Sunny",
+        "Hyundai Verna"
+    };
+
+    int driverRating[5] =
+    {
+        5, 4, 5, 4, 5
+    };
+
+    bool driverAvailable[5] =
+    {
+        true, true, true, false, true
+    };
+
+    // Booking information
+    int rideID = 1001;
+    bool rideBooked = false;
+
+    cout << "=====================================\n";
+    cout << "        WELCOME TO RIDEGO             \n";
+    cout << "   Online Ride Booking System         \n";
+    cout << "=====================================\n";
+
+    cout << "\nEnter your name: ";
+    getline(cin, customerName);
+
+    cout << "Enter your phone number: ";
+    getline(cin, phone);
+
+    do
+    {
+        cout << "\n\n========== RIDEGO MENU ==========\n";
+        cout << "1. Book a Ride\n";
+        cout << "2. Show Available Drivers\n";
+        cout << "3. View Current Ride\n";
+        cout << "4. Cancel Ride\n";
+        cout << "5. Exit\n";
+        cout << "=================================\n";
+
+        cout << "Enter your choice: ";
+        cin >> choice;
+
+        // 1. Book Ride
+        if (choice == 1)
+        {
+            if (rideBooked == true)
+            {
+                cout << "\nYou already have an active ride!\n";
+            }
+            else
+            {
+                cin.ignore();
+
+                cout << "\nEnter pickup location: ";
+                getline(cin, pickup);
+
+                cout << "Enter destination: ";
+                getline(cin, destination);
+
+                cout << "\nEnter distance in KM: ";
+                cin >> distance;
+
+                if (distance <= 0)
+                {
+                    cout << "\nInvalid distance!\n";
+                    continue;
+                }
+
+                cout << "\n========== RIDE TYPE ==========\n";
+                cout << "1. Economy\n";
+                cout << "2. Comfort\n";
+                cout << "3. Premium\n";
+                cout << "Choose ride type: ";
+                cin >> rideTypeChoice;
+
+                if (rideTypeChoice == 1)
+                {
+                    rideType = "Economy";
+                    pricePerKM = 8;
+                    baseFare = 15;
+                    serviceFee = 5;
+                }
+                else if (rideTypeChoice == 2)
+                {
+                    rideType = "Comfort";
+                    pricePerKM = 12;
+                    baseFare = 20;
+                    serviceFee = 8;
+                }
+                else if (rideTypeChoice == 3)
+                {
+                    rideType = "Premium";
+                    pricePerKM = 18;
+                    baseFare = 30;
+                    serviceFee = 10;
+                }
+                else
+                {
+                    cout << "\nInvalid choice!\n";
+                    continue;
+                }
+
+                // Show available drivers
+                showDrivers(driverNames, carNames, driverRating,
+                            driverAvailable, 5);
+
+                cout << "\n\nChoose Driver ID: ";
+                cin >> driverChoice;
+
+                if (driverChoice < 1 || driverChoice > 5)
+                {
+                    cout << "\nInvalid Driver ID!\n";
+                    continue;
+                }
+
+                if (driverAvailable[driverChoice - 1] == false)
+                {
+                    cout << "\nThis driver is not available!\n";
+                    continue;
+                }
+
+                // Calculate price
+                totalPrice = baseFare + (distance * pricePerKM) + serviceFee;
+
+                cout << "\n========== PAYMENT ==========\n";
+                cout << "1. Cash\n";
+                cout << "2. Card\n";
+                cout << "3. Wallet\n";
+                cout << "Choose payment method: ";
+
+                int paymentChoice;
+                cin >> paymentChoice;
+
+                if (paymentChoice == 1)
+                {
+                    paymentMethod = "Cash";
+                }
+                else if (paymentChoice == 2)
+                {
+                    paymentMethod = "Card";
+                }
+                else if (paymentChoice == 3)
+                {
+                    paymentMethod = "Wallet";
+                }
+                else
+                {
+                    cout << "\nInvalid payment method!\n";
+                    continue;
+                }
+
+                // Book ride
+                rideBooked = true;
+
+                // Driver becomes unavailable
+                driverAvailable[driverChoice - 1] = false;
+
+                cout << "\n\n=====================================\n";
+                cout << "          RIDE BOOKED SUCCESSFULLY   \n";
+                cout << "=====================================\n";
+
+                cout << "Ride ID: " << rideID << endl;
+                cout << "Customer: " << customerName << endl;
+                cout << "Pickup: " << pickup << endl;
+                cout << "Destination: " << destination << endl;
+                cout << "Distance: " << distance << " KM" << endl;
+                cout << "Ride Type: " << rideType << endl;
+
+                cout << "Driver: "
+                     << driverNames[driverChoice - 1] << endl;
+
+                cout << "Car: "
+                     << carNames[driverChoice - 1] << endl;
+
+                cout << "Driver Rating: "
+                     << driverRating[driverChoice - 1]
+                     << "/5" << endl;
+
+                cout << "Payment: " << paymentMethod << endl;
+
+                cout << "Total Price: "
+                     << totalPrice << " EGP" << endl;
+
+                cout << "Status: Driver is coming..." << endl;
+
+                cout << "=====================================\n";
+
+                rideID++;
+            }
+        }
+
+        // 2. Show Drivers
+        else if (choice == 2)
+        {
+            showDrivers(driverNames, carNames, driverRating,
+                        driverAvailable, 5);
+        }
+
+        // 3. View Current Ride
+        else if (choice == 3)
+        {
+            if (rideBooked == false)
+            {
+                cout << "\nYou don't have an active ride.\n";
+            }
+            else
+            {
+                cout << "\n========== CURRENT RIDE ==========\n";
+
+                cout << "Customer: " << customerName << endl;
+                cout << "Phone: " << phone << endl;
+                cout << "Pickup: " << pickup << endl;
+                cout << "Destination: " << destination << endl;
+                cout << "Distance: " << distance << " KM" << endl;
+                cout << "Ride Type: " << rideType << endl;
+                cout << "Payment: " << paymentMethod << endl;
+
+                cout << "==================================\n";
+            }
+        }
+
+        // 4. Cancel Ride
+        else if (choice == 4)
+        {
+            if (rideBooked == false)
+            {
+                cout << "\nThere is no active ride to cancel.\n";
+            }
+            else
+            {
+                cout << "\nYour ride has been cancelled successfully.\n";
+
+                rideBooked = false;
+
+                // Make all drivers available again
+                for (int i = 0; i < 5; i++)
+                {
+                    driverAvailable[i] = true;
+                }
+            }
+        }
+
+        // 5. Exit
+        else if (choice == 5)
+        {
+            cout << "\nThank you for using RideGo!\n";
+            cout << "Have a safe trip!\n";
+        }
+
+        else
+        {
+            cout << "\nInvalid choice. Please try again.\n";
+        }
+
+    } while (choice != 5);
+
+    return 0;
+}
